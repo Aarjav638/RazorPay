@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import {RAZORPAY_API} from '@env';
 import RazorpayCheckout from 'react-native-razorpay';
 type userDetails = {
   fullname: string;
@@ -40,13 +41,13 @@ export async function makePayment({
   totalprice,
 }: userDetails) {
   let orderid = await generateUniqueOrderId();
-
+  console.log(RAZORPAY_API);
   var options = {
     description: 'Sample Payment',
     image: require('../assets/razorpay-icon.svg'),
     order_id: orderid,
     currency: 'INR',
-    key: '<api-key>',
+    key: RAZORPAY_API,
     amount: totalprice * 100,
     name: 'Razorpay',
     prefill: {
