@@ -47,7 +47,7 @@ export async function makePayment({
     order_id: orderid,
     currency: 'INR',
     key: '<api-key>',
-    amount: totalprice,
+    amount: totalprice * 100,
     name: 'Razorpay',
     prefill: {
       email,
