@@ -1,3 +1,4 @@
 declare module '@env' {
-  export const RAZORPAY_API: string;
+  export const RAZORPAY_KEY: string;
+  export const RAZORPAY_SECRET: string;
 }

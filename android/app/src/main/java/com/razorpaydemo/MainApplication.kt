@@ -1,4 +1,4 @@
-package com.razorpay
+package com.razorpaydemo
 
 import android.app.Application
 import com.facebook.react.PackageList

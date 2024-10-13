@@ -1,6 +1,7 @@
 import {Alert} from 'react-native';
-import {RAZORPAY_API} from '@env';
+import {RAZORPAY_KEY, RAZORPAY_SECRET} from '@env';
 import RazorpayCheckout from 'react-native-razorpay';
+import axios from 'axios';
 type userDetails = {
   fullname: string;
   address: string;
@@ -11,23 +12,24 @@ type userDetails = {
   totalprice: number;
 };
 
-const orderIds = new Set();
+// const orderIds = new Set();
 
-async function generateUniqueOrderId(length = 10) {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let orderId;
-
-  do {
-    orderId = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      orderId += characters[randomIndex];
-    }
-  } while (orderIds.has(orderId));
-
-  orderIds.add(orderId);
-  return orderId;
+async function generateUniqueOrderId(totalPrice: number) {
+  try {
+    const response = await axios.post(
+      'https://ewe-pretty-newt.ngrok-free.app/order',
+      {
+        key: RAZORPAY_KEY,
+        secret: RAZORPAY_SECRET,
+        amount: totalPrice * 100,
+        currency: 'INR',
+      },
+    );
+    const data = await response.data;
+    return data.order_id;
+  } catch (errr) {
+    console.log(errr);
+  }
 }
 
 export async function makePayment({
@@ -40,14 +42,16 @@ export async function makePayment({
 
   totalprice,
 }: userDetails) {
-  let orderid = await generateUniqueOrderId();
-  console.log(RAZORPAY_API);
+  let orderid = await generateUniqueOrderId(totalprice);
+  console.log(orderid);
+  console.log(RAZORPAY_KEY);
+
   var options = {
     description: 'Sample Payment',
     image: require('../assets/razorpay-icon.svg'),
     order_id: orderid,
     currency: 'INR',
-    key: RAZORPAY_API,
+    key: RAZORPAY_KEY,
     amount: totalprice * 100,
     name: 'Razorpay',
     prefill: {
